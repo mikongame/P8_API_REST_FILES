@@ -37,6 +37,16 @@ import taskRoutes from "./routes/tasks.js";
 app.use("/plans", planRoutes);
 app.use("/tasks", taskRoutes);
 
+// Ruta de comprobación
+app.get("/", (req, res) => {
+  res.send("📡 API Planify Files en funcionamiento");
+});
+
+// Middleware para rutas no encontradas
+app.use((req, res) => {
+  res.status(404).json({ message: "Ruta no encontrada" });
+});
+
 io.on("connection", (socket) => {
   console.log("🔌 Usuario conectado");
 
@@ -54,3 +64,6 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
 });
+
+
+

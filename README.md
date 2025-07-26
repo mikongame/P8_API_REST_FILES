@@ -1,6 +1,6 @@
-## Planify Backend – API REST + WebSockets
+## Planify Backend – API REST + WebSockets + Cloudinary
 
-Aplicación backend para organizar planes colaborativos (como *La Noche de la Hamburguesa*) mediante tareas asignadas, en tiempo real.
+Aplicación backend para organizar planes colaborativos (como *La Noche de la Hamburguesa*) mediante tareas asignadas, en tiempo real, con imágenes alojadas en Cloudinary.
 
 ---
 
@@ -9,19 +9,44 @@ Aplicación backend para organizar planes colaborativos (como *La Noche de la Ha
 * **Node.js** + **Express**
 * **MongoDB Atlas** + Mongoose
 * **Socket.io** (WebSockets)
+* **Cloudinary** (almacenamiento de archivos)
+* **Multer** (middleware de subida)
 * **dotenv**, **readline**
 
 ---
 
 ### Funcionalidades
 
-* CRUD completo para:
+- CRUD completo para:
 
-  * `Plan`: planificación colaborativa (con título y descripción)
-  * `Task`: tareas dentro de un plan (con estado `done`)
-* Relación entre modelos: un plan tiene un array de tareas
-* Comunicación en tiempo real vía Socket.io (`new-task`, `task-added`)
-* Script de semilla interactivo (`node seed.js`) con opción de datos predefinidos o personalizados
+  - `Plan`: planificación colaborativa (título, descripción, imagen)
+  - `Task`: tareas dentro de un plan (nombre, imagen, estado `done`)
+  
+- Relación entre modelos: un plan tiene un array de tareas
+
+- Comunicación en tiempo real vía WebSockets:
+  - `new-task`, `task-added`
+
+- Subida y eliminación de imágenes con Cloudinary
+
+- Script de semilla interactivo (`node seed.js`) con:
+  - Datos predefinidos
+  - Opción para introducir datos personalizados
+
+---
+
+## 📦 Gestión de Archivos (Cloudinary)
+
+Este proyecto incluye subida de imágenes para ambos modelos:
+
+- Las imágenes se suben mediante formularios `multipart/form-data`
+- Se eliminan automáticamente de Cloudinary al borrar el recurso
+- Compatible con Postman o interfaces web
+
+#### Campos de imagen:
+
+- **Plan:** campo `image`
+- **Task:** campo `image`
 
 ---
 
@@ -35,19 +60,19 @@ node seed.js      # Poblar la base de datos con planes y tareas
 
 ---
 
-### Endpoints REST principales
+### Endpoints REST
 
-| Método | Ruta         | Descripción                                |
-| ------ | ------------ | ------------------------------------------ |
-| GET    | `/plans`     | Obtener todos los planes (con tareas)      |
-| GET    | `/plans/:id` | Obtener un plan por ID                     |
-| POST   | `/plans`     | Crear un nuevo plan                        |
-| PUT    | `/plans/:id` | Editar un plan (sin eliminar tareas)       |
-| DELETE | `/plans/:id` | Eliminar un plan                           |
-| GET    | `/tasks`     | Listar todas las tareas                    |
-| POST   | `/tasks`     | Crear una nueva tarea y añadirla a un plan |
-| PUT    | `/tasks/:id` | Editar una tarea                           |
-| DELETE | `/tasks/:id` | Eliminar una tarea y quitarla del plan     |
+| Método | Ruta         | Descripción                                       |
+|--------|--------------|---------------------------------------------------|
+| GET    | `/plans`     | Obtener todos los planes (con tareas)             |
+| GET    | `/plans/:id` | Obtener un plan por ID                            |
+| POST   | `/plans`     | Crear un nuevo plan (con imagen)                  |
+| PUT    | `/plans/:id` | Editar un plan (puede actualizar imagen)          |
+| DELETE | `/plans/:id` | Eliminar un plan (y su imagen en Cloudinary)      |
+| GET    | `/tasks`     | Listar todas las tareas                           |
+| POST   | `/tasks`     | Crear una nueva tarea (con imagen)                |
+| PUT    | `/tasks/:id` | Editar una tarea (puede actualizar imagen)        |
+| DELETE | `/tasks/:id` | Eliminar una tarea (y su imagen en Cloudinary)    |
 
 ---
 
@@ -83,7 +108,3 @@ Permite elegir entre:
 ### Inspiración pedagógica
 
 Este proyecto toma como referencia el ejercicio realizado en otro curso llamado **“La Noche de la Hamburguesa”**, donde se explora la relación entre modelos en MongoDB mediante una estructura narrativa: un plan (evento o noche especial) que contiene múltiples tareas organizativas.
-
-
-
-
