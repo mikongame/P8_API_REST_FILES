@@ -18,7 +18,7 @@ const MONGO_URI = process.env.MONGO_URI;
 const seed = async () => {
   try {
     await mongoose.connect(MONGO_URI);
-    console.log("✅ Conectado a MongoDB para semilla");
+    console.log("Conectado a MongoDB para semilla");
 
     await Task.deleteMany();
     await Plan.deleteMany();
@@ -26,7 +26,6 @@ const seed = async () => {
     const useDefault = (await ask("¿Usar datos predefinidos? (s/n): ")).toLowerCase() === "s";
 
     if (useDefault) {
-      // Imágenes públicas (opcional: reemplaza por tus URLs de Cloudinary)
       const planImage1 = "https://res.cloudinary.com/dscnxo4mi/image/upload/v1753561466/photo-1521305916504-4a1121188589_irelid.jpg";
       const planImage2 = "https://res.cloudinary.com/dscnxo4mi/image/upload/v1753560890/photo-1465188035480-cf3a60801ea5_tlbpxo.jpg";
 
@@ -53,9 +52,8 @@ const seed = async () => {
       await Plan.findByIdAndUpdate(plan1._id, { $addToSet: { tasks: { $each: [task1._id, task2._id] } } });
       await Plan.findByIdAndUpdate(plan2._id, { $addToSet: { tasks: task3._id } });
 
-      console.log("🌱 Datos de prueba con imágenes cargados");
+      console.log("Datos de prueba con imágenes cargados");
     } else {
-      // Datos personalizados por consola
       const numPlanes = parseInt(await ask("¿Cuántos planes quieres crear?: "), 10);
 
       for (let i = 0; i < numPlanes; i++) {
@@ -76,15 +74,15 @@ const seed = async () => {
         }
 
         await Plan.findByIdAndUpdate(plan._id, { $addToSet: { tasks: { $each: taskIds } } });
-        console.log(`✅ Plan "${title}" creado con ${taskIds.length} tareas.`);
+        console.log(`Plan "${title}" creado con ${taskIds.length} tareas.`);
       }
     }
 
-    console.log("✅ Seed finalizado");
+    console.log("Seed finalizado");
     rl.close();
     process.exit();
   } catch (error) {
-    console.error("❌ Error al ejecutar semilla:", error);
+    console.error("Error al ejecutar semilla:", error);
     rl.close();
     process.exit(1);
   }

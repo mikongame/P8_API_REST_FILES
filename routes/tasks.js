@@ -6,20 +6,17 @@ import cloudinary from "../middlewares/cloudinary.js";
 
 const router = express.Router();
 
-// GET todas las tareas
 router.get("/", async (req, res) => {
   const tasks = await Task.find().populate("plan");
   res.json(tasks);
 });
 
-// GET una tarea por ID
 router.get("/:id", async (req, res) => {
   const task = await Task.findById(req.params.id).populate("plan");
   if (!task) return res.status(404).json({ message: "Tarea no encontrada" });
   res.json(task);
 });
 
-// POST nueva tarea (con imagen + añadirla al plan)
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { name, planId } = req.body;
@@ -34,13 +31,11 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// PUT editar tarea (incluye imagen nueva)
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Tarea no encontrada" });
 
-    // Si hay nueva imagen, eliminar la anterior
     if (req.file?.path && task.image) {
       const publicId = task.image.split("/").pop().split(".")[0];
       await cloudinary.uploader.destroy(publicId);
@@ -58,14 +53,12 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-// DELETE eliminar tarea (y quitarla del plan + eliminar imagen)
 router.delete("/:id", async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
     if (task) {
       await Plan.findByIdAndUpdate(task.plan, { $pull: { tasks: task._id } });
 
-      // Eliminar imagen si existe
       if (task.image) {
         const publicId = task.image.split("/").pop().split(".")[0];
         await cloudinary.uploader.destroy(publicId);

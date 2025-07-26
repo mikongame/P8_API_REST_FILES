@@ -6,20 +6,17 @@ import cloudinary from "../middlewares/cloudinary.js";
 
 const router = express.Router();
 
-// GET todos los planes
 router.get("/", async (req, res) => {
   const plans = await Plan.find().populate("tasks");
   res.json(plans);
 });
 
-// GET un plan por ID
 router.get("/:id", async (req, res) => {
   const plan = await Plan.findById(req.params.id).populate("tasks");
   if (!plan) return res.status(404).json({ message: "Plan no encontrado" });
   res.json(plan);
 });
 
-// POST nuevo plan con imagen
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { title, description } = req.body;
@@ -32,7 +29,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// PUT editar plan (con reemplazo de imagen)
+
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const { tasks, ...rest } = req.body;
@@ -40,7 +37,6 @@ router.put("/:id", upload.single("image"), async (req, res) => {
     const plan = await Plan.findById(req.params.id);
     if (!plan) return res.status(404).json({ message: "Plan no encontrado" });
 
-    // Si hay nueva imagen, borrar la anterior
     if (req.file?.path && plan.image) {
       const publicId = plan.image.split("/").pop().split(".")[0];
       await cloudinary.uploader.destroy(publicId);
@@ -58,13 +54,11 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-// DELETE eliminar plan y su imagen
 router.delete("/:id", async (req, res) => {
   try {
     const plan = await Plan.findByIdAndDelete(req.params.id);
     if (!plan) return res.status(404).json({ message: "Plan no encontrado" });
 
-    // Borrar imagen si existe
     if (plan.image) {
       const publicId = plan.image.split("/").pop().split(".")[0];
       await cloudinary.uploader.destroy(publicId);
