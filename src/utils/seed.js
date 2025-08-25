@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import readline from "readline";
-import Plan from "./models/Plan.js";
-import Task from "./models/Task.js";
+import dotenv from 'dotenv';
+import readline from 'readline';
+import connectDB from './db.js';
+import Plan from '../api/models/Plan.js';
+import Task from '../api/models/Task.js';
 
 dotenv.config();
 
@@ -13,17 +13,14 @@ const rl = readline.createInterface({
 
 const ask = (q) => new Promise((res) => rl.question(q, res));
 
-const MONGO_URI = process.env.MONGO_URI;
-
 const seed = async () => {
   try {
-    await mongoose.connect(MONGO_URI);
-    console.log("Conectado a MongoDB para semilla");
+    await connectDB();
 
     await Task.deleteMany();
     await Plan.deleteMany();
 
-    const useDefault = (await ask("¿Usar datos predefinidos? (s/n): ")).toLowerCase() === "s";
+    const useDefault = (await ask('¿Usar datos predefinidos? (s/n): ')).toLowerCase() === 's';
 
     if (useDefault) {
       const planImage1 = "https://res.cloudinary.com/dscnxo4mi/image/upload/v1753561466/photo-1521305916504-4a1121188589_irelid.jpg";
@@ -34,27 +31,27 @@ const seed = async () => {
       const taskImage3 = "https://res.cloudinary.com/dscnxo4mi/image/upload/v1753561656/photo-1625217527288-93919c99650a_xzrbwi.jpg";
 
       const plan1 = await Plan.create({
-        title: "Noche de la Hamburguesa",
-        description: "Plan para cenar juntos en casa de Juan",
+        title: 'Noche de la Hamburguesa',
+        description: 'Plan para cenar juntos en casa de Juan',
         image: planImage1
       });
 
       const plan2 = await Plan.create({
-        title: "Fin de semana en la montaña",
-        description: "Organización previa a la escapada",
+        title: 'Fin de semana en la montaña',
+        description: 'Organización previa a la escapada',
         image: planImage2
       });
 
-      const task1 = await Task.create({ name: "Comprar pan de hamburguesa", plan: plan1._id, image: taskImage1 });
-      const task2 = await Task.create({ name: "Traer cerveza", plan: plan1._id, image: taskImage2 });
-      const task3 = await Task.create({ name: "Revisar ruta GPS", plan: plan2._id, image: taskImage3 });
+      const task1 = await Task.create({ name: 'Comprar pan de hamburguesa', plan: plan1._id, image: taskImage1 });
+      const task2 = await Task.create({ name: 'Traer cerveza', plan: plan1._id, image: taskImage2 });
+      const task3 = await Task.create({ name: 'Revisar ruta GPS', plan: plan2._id, image: taskImage3 });
 
       await Plan.findByIdAndUpdate(plan1._id, { $addToSet: { tasks: { $each: [task1._id, task2._id] } } });
       await Plan.findByIdAndUpdate(plan2._id, { $addToSet: { tasks: task3._id } });
 
-      console.log("Datos de prueba con imágenes cargados");
+      console.log('Datos predefinidos cargados');
     } else {
-      const numPlanes = parseInt(await ask("¿Cuántos planes quieres crear?: "), 10);
+      const numPlanes = parseInt(await ask('¿Cuántos planes quieres crear?: '), 10);
 
       for (let i = 0; i < numPlanes; i++) {
         const title = await ask(`Título del plan ${i + 1}: `);
@@ -78,11 +75,10 @@ const seed = async () => {
       }
     }
 
-    console.log("Seed finalizado");
     rl.close();
-    process.exit();
+    process.exit(0);
   } catch (error) {
-    console.error("Error al ejecutar semilla:", error);
+    console.error('Error al ejecutar semilla:', error);
     rl.close();
     process.exit(1);
   }
