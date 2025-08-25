@@ -15,6 +15,25 @@ Aplicación backend para organizar planes colaborativos (como *La Noche de la Ha
 
 ---
 
+### Estructura del proyecto
+
+```bash
+/src
+    index.js
+    /api
+        /routes
+        /controllers
+        /models
+        /middlewares
+    /utils
+        db.js
+        seed.js
+.env
+README.md
+.gitignore
+```
+---
+
 ### Funcionalidades
 
 - CRUD completo para:
@@ -42,6 +61,7 @@ Este proyecto incluye subida de imágenes para ambos modelos:
 - Las imágenes se suben mediante formularios `multipart/form-data`
 - Se eliminan automáticamente de Cloudinary al borrar el recurso
 - Compatible con Postman o interfaces web
+- Se deja comentado en `upload.js` el intento de usar una carpeta específica en Cloudinary (`folder: 'planify'`)
 
 #### Campos de imagen:
 
