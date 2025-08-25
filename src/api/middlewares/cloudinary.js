@@ -9,7 +9,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Si quisieras usar carpetas específicas (reutilización del storage):
 // cloudinary.uploader.upload(filePath, { folder: 'plans' })
 
 export default cloudinary;

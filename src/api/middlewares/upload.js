@@ -5,7 +5,7 @@ import cloudinary from './cloudinary.js';
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    // folder: 'planify', // puedes comentar esta línea si quieres evitar guardar en carpeta fija
+    // folder: 'planify',
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
     transformation: [{ width: 600, height: 600, crop: 'limit' }]
   }

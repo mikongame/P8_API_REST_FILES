@@ -11,7 +11,7 @@ import taskRoutes from './api/routes/tasks.routes.js';
 dotenv.config();
 
 if (!process.env.MONGO_URI) {
-  console.error('❌ Falta la variable MONGO_URI en el .env');
+  console.error('Falta la variable MONGO_URI en el .env');
   process.exit(1);
 }
 
@@ -54,5 +54,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
+  console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
