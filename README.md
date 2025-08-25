@@ -29,7 +29,7 @@ Aplicación backend para organizar planes colaborativos (como *La Noche de la Ha
 
 - Subida y eliminación de imágenes con Cloudinary
 
-- Script de semilla interactivo (`node seed.js`) con:
+- Script de semilla interactivo (`npm run seed`) con:
   - Datos predefinidos
   - Opción para introducir datos personalizados
 
@@ -55,7 +55,7 @@ Este proyecto incluye subida de imágenes para ambos modelos:
 ```bash
 npm install       # Instalar dependencias
 npm run dev       # Iniciar el servidor con nodemon
-node seed.js      # Poblar la base de datos con planes y tareas
+npm run seed      # Poblar la base de datos con planes y tareas
 ```
 
 ---
