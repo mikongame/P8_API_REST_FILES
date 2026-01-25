@@ -5,7 +5,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 import connectDB from './utils/db.js';
-import planRoutes from './api/routes/plans.routes.js';
+import authRoutes from './api/routes/auth.routes.js';
+import eventRoutes from './api/routes/events.routes.js';
 import taskRoutes from './api/routes/tasks.routes.js';
 
 dotenv.config();
@@ -29,7 +30,8 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-app.use('/plans', planRoutes);
+app.use('/auth', authRoutes);
+app.use('/events', eventRoutes);
 app.use('/tasks', taskRoutes);
 
 app.get('/', (req, res) => {

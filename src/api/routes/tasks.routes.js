@@ -1,5 +1,4 @@
-import express from 'express';
-import upload from '../middlewares/upload.js';
+import { Router } from 'express';
 import {
   getAllTasks,
   getTaskById,
@@ -7,13 +6,18 @@ import {
   updateTask,
   deleteTask
 } from '../controllers/tasks.controller.js';
+import { isAuth } from '../middlewares/auth.middleware.js';
+import upload from '../middlewares/upload.js';
 
-const router = express.Router();
+const router = Router();
 
+// Rutas públicas
 router.get('/', getAllTasks);
 router.get('/:id', getTaskById);
-router.post('/', upload.single('image'), createTask);
-router.put('/:id', upload.single('image'), updateTask);
-router.delete('/:id', deleteTask);
+
+// Rutas protegidas (requieren autenticación)
+router.post('/', isAuth, upload.single('image'), createTask);
+router.put('/:id', isAuth, upload.single('image'), updateTask);
+router.delete('/:id', isAuth, deleteTask);
 
 export default router;
