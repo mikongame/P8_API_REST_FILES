@@ -30,17 +30,23 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+import { globalErrorHandler, AppError } from './api/middlewares/error.middleware.js';
+
 app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
 app.use('/tasks', taskRoutes);
 
 app.get('/', (req, res) => {
-  res.send('API Planify Files en funcionamiento');
+  res.send('API Eventify en funcionamiento');
 });
 
-app.use((req, res) => {
-  res.status(404).json({ message: 'Ruta no encontrada' });
+// Manejo de rutas no encontradas
+app.use((req, res, next) => {
+  next(new AppError(`No se encontró la ruta ${req.originalUrl} en este servidor`, 404));
 });
+
+// Middleware Global de Errores
+app.use(globalErrorHandler);
 
 io.on('connection', (socket) => {
   console.log('🟢 Usuario conectado');

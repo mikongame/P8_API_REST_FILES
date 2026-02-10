@@ -2,6 +2,15 @@
 
 Sistema completo de gestión de eventos evolucionado desde "Planify" para el Ejercicio 10.
 
+## 🏗️ Arquitectura Profesional y Buenas Prácticas
+Este proyecto sigue una arquitectura robusta diseñada para escalabilidad y mantenibilidad por un equipo humano:
+
+- **Centralización de Errores**: Middleware global (`AppError`) para respuestas consistentes y seguras, evitando `try/catch` repetitivos.
+- **Controladores Limpios**: Uso de wrappers (`catchAsync`) para mantener la lógica de negocio pura y legible.
+- **Componentización Frontend**: Elementos UI reutilizables (`FormInput`, `LoadingSpinner`) para evitar duplicidad de código.
+- **Seguridad**: Autenticación JWT con validación estricta, hashing de contraseñas y sanitización de inputs.
+- **Clean Code**: Nombres semánticos, funciones de responsabilidad única y estructura modular.
+
 ## 🚀 Tecnologías
 - **Backend**: Express, MongoDB (Mongoose), Cloudinary (Multer), JWT, Bcrypt.
 - **Frontend**: Vanilla JavaScript SPA, Vite, CSS moderno.
