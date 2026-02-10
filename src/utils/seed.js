@@ -1,11 +1,32 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { v2 as cloudinary } from 'cloudinary';
 import User from '../api/models/User.js';
 import Event from '../api/models/Event.js';
 import Task from '../api/models/Task.js';
 import connectDB from './db.js';
 
-dotenv.config();
+// Configurar Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const uploadImage = async (url, publicId) => {
+  try {
+    const result = await cloudinary.uploader.upload(url, {
+      folder: 'planify_seed',
+      public_id: publicId,
+      overwrite: true
+    });
+    console.log(`✅ Imagen subida a Cloudinary: ${publicId}`);
+    return result.secure_url;
+  } catch (error) {
+    console.error(`❌ Error subiendo imagen ${publicId}:`, error.message);
+    return url;
+  }
+};
 
 const seedDatabase = async () => {
   try {
@@ -17,38 +38,26 @@ const seedDatabase = async () => {
     await Event.deleteMany({});
     await Task.deleteMany({});
 
-    // Crear usuarios de prueba
+    // Crear usuarios de prueba (sin cambios)...
     console.log('👥 Creando usuarios de prueba...');
     
     const users = await User.create([
-      {
-        name: 'Juan Pérez',
-        email: 'juan@test.com',
-        password: '123456' // Se hasheará automáticamente por el pre-save hook
-      },
-      {
-        name: 'María García',
-        email: 'maria@test.com',
-        password: '123456'
-      },
-      {
-        name: 'Carlos López',
-        email: 'carlos@test.com',
-        password: '123456'
-      },
-      {
-        name: 'Ana Martínez',
-        email: 'ana@test.com',
-        password: '123456'
-      },
-      {
-        name: 'Pedro Sánchez',
-        email: 'pedro@test.com',
-        password: '123456'
-      }
+      { name: 'Juan Pérez', email: 'juan@test.com', password: '123456' },
+      { name: 'María García', email: 'maria@test.com', password: '123456' },
+      { name: 'Carlos López', email: 'carlos@test.com', password: '123456' },
+      { name: 'Ana Martínez', email: 'ana@test.com', password: '123456' },
+      { name: 'Pedro Sánchez', email: 'pedro@test.com', password: '123456' }
     ]);
 
     console.log(`✅ ${users.length} usuarios creados`);
+
+    // Subir imágenes a Cloudinary
+    console.log('☁️  Subiendo imágenes a Cloudinary...');
+    const burgerUrl = await uploadImage('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80', 'burger');
+    const hackathonUrl = await uploadImage('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80', 'hackathon');
+    const newyearUrl = await uploadImage('https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&w=800&q=80', 'newyear');
+    const gamingUrl = await uploadImage('https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=800&q=80', 'gaming');
+    const cookingUrl = await uploadImage('https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=80', 'cooking');
 
     // Crear eventos
     console.log('🎉 Creando eventos...');
@@ -59,7 +68,7 @@ const seedDatabase = async () => {
         description: 'Evento clásico para amantes de las hamburguesas gourmet. Traed vuestras mejores recetas!',
         date: new Date('2025-12-31T20:00:00'),
         location: 'Casa de Juan',
-        poster: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
+        poster: burgerUrl,
         createdBy: users[0]._id,
         attendees: [users[1]._id, users[2]._id, users[3]._id]
       },
@@ -68,7 +77,7 @@ const seedDatabase = async () => {
         description: 'Maratón de programación de 24 horas. Pizza y café incluidos.',
         date: new Date('2025-12-28T10:00:00'),
         location: 'Centro de Innovación TechHub',
-        poster: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
+        poster: hackathonUrl,
         createdBy: users[1]._id,
         attendees: [users[0]._id, users[2]._id, users[4]._id]
       },
@@ -77,7 +86,7 @@ const seedDatabase = async () => {
         description: 'Celebración de fin de año con música, comida y fuegos artificiales.',
         date: new Date('2025-12-31T22:00:00'),
         location: 'Azotea The Sky Lounge',
-        poster: 'https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&w=800&q=80',
+        poster: newyearUrl,
         createdBy: users[2]._id,
         attendees: [users[0]._id, users[1]._id, users[3]._id, users[4]._id]
       },
@@ -86,7 +95,7 @@ const seedDatabase = async () => {
         description: 'Competición amistosa de videojuegos retro. Trae tu mando favorito.',
         date: new Date('2025-12-29T16:00:00'),
         location: 'GameZone Arena',
-        poster: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=800&q=80',
+        poster: gamingUrl,
         createdBy: users[3]._id,
         attendees: [users[1]._id, users[4]._id]
       },
@@ -95,7 +104,7 @@ const seedDatabase = async () => {
         description: 'Aprende a hacer pasta fresca y tiramisu auténtico.',
         date: new Date('2026-01-05T18:00:00'),
         location: 'Escuela Culinaria La Dolce Vita',
-        poster: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=80',
+        poster: cookingUrl,
         createdBy: users[4]._id,
         attendees: [users[0]._id, users[2]._id]
       }
