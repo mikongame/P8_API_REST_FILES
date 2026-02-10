@@ -59,6 +59,7 @@ const seedDatabase = async () => {
         description: 'Evento clásico para amantes de las hamburguesas gourmet. Traed vuestras mejores recetas!',
         date: new Date('2025-12-31T20:00:00'),
         location: 'Casa de Juan',
+        poster: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
         createdBy: users[0]._id,
         attendees: [users[1]._id, users[2]._id, users[3]._id]
       },
@@ -67,6 +68,7 @@ const seedDatabase = async () => {
         description: 'Maratón de programación de 24 horas. Pizza y café incluidos.',
         date: new Date('2025-12-28T10:00:00'),
         location: 'Centro de Innovación TechHub',
+        poster: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
         createdBy: users[1]._id,
         attendees: [users[0]._id, users[2]._id, users[4]._id]
       },
@@ -75,6 +77,7 @@ const seedDatabase = async () => {
         description: 'Celebración de fin de año con música, comida y fuegos artificiales.',
         date: new Date('2025-12-31T22:00:00'),
         location: 'Azotea The Sky Lounge',
+        poster: 'https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&w=800&q=80',
         createdBy: users[2]._id,
         attendees: [users[0]._id, users[1]._id, users[3]._id, users[4]._id]
       },
@@ -83,6 +86,7 @@ const seedDatabase = async () => {
         description: 'Competición amistosa de videojuegos retro. Trae tu mando favorito.',
         date: new Date('2025-12-29T16:00:00'),
         location: 'GameZone Arena',
+        poster: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=800&q=80',
         createdBy: users[3]._id,
         attendees: [users[1]._id, users[4]._id]
       },
@@ -91,6 +95,7 @@ const seedDatabase = async () => {
         description: 'Aprende a hacer pasta fresca y tiramisu auténtico.',
         date: new Date('2026-01-05T18:00:00'),
         location: 'Escuela Culinaria La Dolce Vita',
+        poster: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=80',
         createdBy: users[4]._id,
         attendees: [users[0]._id, users[2]._id]
       }

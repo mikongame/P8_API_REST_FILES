@@ -40,6 +40,9 @@ app.get('/', (req, res) => {
   res.send('API Eventify en funcionamiento');
 });
 
+// Ignorar favicon
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {
   next(new AppError(`No se encontró la ruta ${req.originalUrl} en este servidor`, 404));
